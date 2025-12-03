@@ -19,6 +19,7 @@ import {
   BarChartOutlined,
   GlobalOutlined,
   HistoryOutlined,
+  FireOutlined,
 } from '@ant-design/icons';
 import { sentimentApi } from '../services/api';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
@@ -86,9 +87,19 @@ const HomePage: React.FC = () => {
               Hardware Insight
             </Title>
           </Space>
-          <Button icon={<HistoryOutlined />} onClick={() => navigate('/history')}>
-            历史记录
-          </Button>
+          <Space>
+            <Button
+              type="primary"
+              icon={<FireOutlined />}
+              onClick={() => navigate('/xiaohongshu')}
+              style={{ background: '#ff4d4f', borderColor: '#ff4d4f' }}
+            >
+              小红书热点
+            </Button>
+            <Button icon={<HistoryOutlined />} onClick={() => navigate('/history')}>
+              历史记录
+            </Button>
+          </Space>
         </div>
       </Header>
 

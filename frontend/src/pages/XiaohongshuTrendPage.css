@@ -1,0 +1,236 @@
+.xiaohongshu-trend-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 16px;
+}
+
+.page-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+.search-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.search-input {
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.analyze-button {
+  border-radius: 8px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.analyze-button:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+}
+
+.example-topics {
+  text-align: center;
+}
+
+.result-section {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.statistics-card,
+.hot-tags-card,
+.suggestions-card,
+.title-suggestions-card,
+.tag-strategy-card,
+.success-prediction-card,
+.ai-insights-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.suggestion-item {
+  border-left: 3px solid #1890ff;
+  transition: all 0.3s;
+}
+
+.suggestion-item.priority-高 {
+  border-left-color: #ff4d4f;
+  background: #fff1f0;
+}
+
+.suggestion-item.priority-中 {
+  border-left-color: #faad14;
+  background: #fffbe6;
+}
+
+.suggestion-item.priority-低 {
+  border-left-color: #d9d9d9;
+}
+
+.suggestion-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .xiaohongshu-trend-page {
+    padding: 12px;
+  }
+
+  .page-container {
+    max-width: 100%;
+  }
+
+  .search-card {
+    padding: 16px;
+  }
+
+  .search-header h3 {
+    font-size: 20px !important;
+  }
+
+  .search-input {
+    font-size: 15px;
+  }
+
+  .analyze-button {
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .statistics-card .ant-statistic-title {
+    font-size: 13px;
+  }
+
+  .statistics-card .ant-statistic-content {
+    font-size: 20px;
+  }
+
+  .hot-tags-card .ant-tag {
+    font-size: 12px !important;
+    padding: 4px 10px !important;
+  }
+
+  .suggestions-card .ant-list-item {
+    padding: 12px 0;
+  }
+
+  .suggestion-item {
+    padding: 12px;
+  }
+
+  .title-suggestions-card .ant-collapse-header {
+    padding: 12px;
+  }
+
+  .tag-strategy-card .ant-tag {
+    font-size: 12px !important;
+  }
+
+  .success-prediction-card h4 {
+    font-size: 16px !important;
+  }
+
+  .ai-insights-card p {
+    font-size: 13px !important;
+  }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 480px) {
+  .xiaohongshu-trend-page {
+    padding: 8px;
+  }
+
+  .search-card {
+    padding: 12px;
+  }
+
+  .search-header h3 {
+    font-size: 18px !important;
+  }
+
+  .example-topics .ant-tag {
+    font-size: 12px !important;
+    padding: 3px 10px !important;
+  }
+
+  .statistics-card .ant-col {
+    margin-bottom: 12px;
+  }
+
+  .statistics-card .ant-statistic-title {
+    font-size: 12px;
+  }
+
+  .statistics-card .ant-statistic-content {
+    font-size: 18px;
+  }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .xiaohongshu-trend-page {
+    background: linear-gradient(135deg, #434343 0%, #000000 100%);
+  }
+}
+
+/* 动画效果 */
+.result-section > * {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 标签样式优化 */
+.ant-tag {
+  border-radius: 4px;
+  user-select: none;
+}
+
+/* 卡片标题样式 */
+.ant-card h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* 进度条样式优化 */
+.ant-progress-text {
+  font-weight: bold;
+}
+
+/* 列表项样式 */
+.ant-list-item {
+  border-bottom: none !important;
+}
+
+/* Collapse 样式 */
+.ant-collapse-ghost > .ant-collapse-item > .ant-collapse-content {
+  background: #fafafa;
+  border-radius: 8px;
+  margin-top: 8px;
+}

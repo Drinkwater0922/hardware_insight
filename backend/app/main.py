@@ -5,7 +5,8 @@ import logging
 
 from app.core.config import settings
 from app.core.database import init_db
-from app.api import sentiment
+from app.api import sentiment, xiaohongshu
+from app import models  # 导入所有模型以确保它们被注册
 
 # 配置日志
 logging.basicConfig(
@@ -48,6 +49,7 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(sentiment.router)
+app.include_router(xiaohongshu.router, prefix="/api/xiaohongshu", tags=["xiaohongshu"])
 
 
 @app.get("/")
