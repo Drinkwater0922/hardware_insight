@@ -3,7 +3,7 @@
 """
 from sqlalchemy import Column, Integer, String, Float, DateTime, Text, JSON, Boolean
 from sqlalchemy.sql import func
-from backend.app.core.database import Base
+from app.core.database import Base
 
 
 class XiaohongshuTrendAnalysis(Base):

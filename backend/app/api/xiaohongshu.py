@@ -8,22 +8,22 @@ from typing import Optional
 import logging
 from datetime import datetime
 
-from backend.app.core.database import get_db
-from backend.app.models.xiaohongshu import XiaohongshuTrendAnalysis, XiaohongshuPost
-from backend.app.schemas.xiaohongshu import (
+from app.core.database import get_db
+from app.models.xiaohongshu import XiaohongshuTrendAnalysis, XiaohongshuPost
+from app.schemas.xiaohongshu import (
     TrendAnalysisRequest,
     TrendAnalysisResponse,
     TrendAnalysisListResponse,
     TrendAnalysisSummary
 )
-from backend.app.scrapers.xiaohongshu_scraper import XiaohongshuScraper
-from backend.app.analyzers.trend_analyzer import TrendAnalyzer
-from backend.app.analyzers.creator_advisor import CreatorAdvisor
+from app.scrapers.xiaohongshu_scraper import XiaohongshuScraper
+from app.analyzers.trend_analyzer import TrendAnalyzer
+from app.analyzers.creator_advisor import CreatorAdvisor
 
 # 尝试导入OpenAI，如果失败则使用None
 try:
     from openai import AsyncOpenAI
-    from backend.app.core.config import settings
+    from app.core.config import settings
     openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY) if hasattr(settings, 'OPENAI_API_KEY') and settings.OPENAI_API_KEY else None
 except Exception:
     openai_client = None

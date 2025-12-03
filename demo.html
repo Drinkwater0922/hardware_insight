@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红书热点领域深度分析 - 演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #ff4d4f;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 16px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #d9d9d9;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 16px;
+            background: #e6f7ff;
+            color: #1890ff;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+
+        .tag.hot {
+            background: #fff1f0;
+            color: #ff4d4f;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1890ff;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .suggestion {
+            background: #fffbe6;
+            border-left: 4px solid #faad14;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+
+        .suggestion.high {
+            background: #fff1f0;
+            border-left-color: #ff4d4f;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #ff4d4f;
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+
+        .progress {
+            width: 100%;
+            height: 24px;
+            background: #f0f0f0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #52c41a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .example-title {
+            background: #f0f2f5;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px 0;
+            font-style: italic;
+            color: #666;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 搜索卡片 -->
+        <div class="card">
+            <h1>🔥 小红书热点领域深度分析</h1>
+            <p class="subtitle">输入领域，获取深度创作建议</p>
+
+            <input type="text" class="search-box" placeholder="输入热点领域，如：智能手表、AI耳机..." value="智能手表">
+            <button class="btn">⚡ 开始分析</button>
+
+            <p style="color: #999; font-size: 14px; margin-top: 12px;">热门领域：</p>
+            <div class="tags">
+                <span class="tag">智能手表</span>
+                <span class="tag">AI耳机</span>
+                <span class="tag">降噪耳机</span>
+                <span class="tag">平板电脑</span>
+                <span class="tag">机械键盘</span>
+                <span class="tag">智能家居</span>
+            </div>
+        </div>
+
+        <!-- 数据概览 -->
+        <div class="card">
+            <h2>📊 数据概览</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">总笔记数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-label">平均点赞</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">8.5%</div>
+                    <div class="stat-label">互动率</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">75/100</div>
+                    <div class="stat-label">机会分数</div>
+                </div>
+            </div>
+            <div style="margin-top: 16px;">
+                <strong>竞争程度：</strong> <span class="tag">中</span><br>
+                <strong style="display: inline-block; margin-top: 8px;">推荐内容类型：</strong> <span class="tag">测评</span>
+            </div>
+        </div>
+
+        <!-- 热门标签 -->
+        <div class="card">
+            <h2>🏷️ 热门标签 TOP15</h2>
+            <div class="tags">
+                <span class="tag hot"><span class="badge">1</span>测评</span>
+                <span class="tag hot"><span class="badge">2</span>真实体验</span>
+                <span class="tag hot"><span class="badge">3</span>种草</span>
+                <span class="tag">新手指南</span>
+                <span class="tag">避坑</span>
+                <span class="tag">干货分享</span>
+                <span class="tag">对比</span>
+                <span class="tag">横评</span>
+                <span class="tag">选购指南</span>
+                <span class="tag">省钱</span>
+                <span class="tag">推荐</span>
+                <span class="tag">使用体验</span>
+                <span class="tag">性价比</span>
+                <span class="tag">深度分析</span>
+                <span class="tag">保姆级</span>
+            </div>
+        </div>
+
+        <!-- 内容创作建议 -->
+        <div class="card">
+            <h2>💡 内容创作建议</h2>
+
+            <div class="suggestion high">
+                <div><span class="badge" style="background: #ff4d4f;">高优先级</span><strong>测评</strong></div>
+                <p style="margin: 8px 0; color: #666;">用户对智能手表的真实测评内容需求高，可以分享使用体验、性能测试等</p>
+                <p style="font-size: 13px; color: #999;">技巧：</p>
+                <ul style="margin: 4px 0 0 20px; font-size: 13px; color: #666;">
+                    <li>前3秒抓住眼球</li>
+                    <li>使用真实数据支撑观点</li>
+                </ul>
+                <div class="example-title">「智能手表深度测评｜30天使用报告」</div>
+                <p style="font-size: 13px; color: #999; margin-top: 8px;">预估浏览量：10000+</p>
+            </div>
+
+            <div class="suggestion">
+                <div><span class="badge" style="background: #faad14;">中优先级</span><strong>教程</strong></div>
+                <p style="margin: 8px 0; color: #666;">制作智能手表的使用教程、选购指南等实用内容，帮助新手快速上手</p>
+                <div class="example-title">「保姆级智能手表选购指南｜新手必看」</div>
+                <p style="font-size: 13px; color: #999; margin-top: 8px;">预估浏览量：5000-10000</p>
+            </div>
+
+            <div class="suggestion">
+                <div><span class="badge" style="background: #1890ff;">中优先级</span><strong>对比</strong></div>
+                <p style="margin: 8px 0; color: #666;">横向对比不同智能手表产品，帮助用户做出购买决策</p>
+                <div class="example-title">「5款热门智能手表横评｜详细数据对比」</div>
+                <p style="font-size: 13px; color: #999; margin-top: 8px;">预估浏览量：5000-10000</p>
+            </div>
+        </div>
+
+        <!-- 爆款标题模板 -->
+        <div class="card">
+            <h2>⭐ 爆款标题模板</h2>
+            <div class="feature-list">
+                <li>
+                    <strong style="color: #722ed1;">测评类</strong> - 吸引力：真实性<br>
+                    <div class="example-title">智能手表深度测评｜30天使用报告</div>
+                </li>
+                <li>
+                    <strong style="color: #1890ff;">教程类</strong> - 吸引力：实用性<br>
+                    <div class="example-title">2024智能手表选购攻略｜避坑指南</div>
+                </li>
+                <li>
+                    <strong style="color: #52c41a;">对比类</strong> - 吸引力：决策帮助<br>
+                    <div class="example-title">5款热门智能手表横评｜详细数据对比</div>
+                </li>
+                <li>
+                    <strong style="color: #ff4d4f;">避坑类</strong> - 吸引力：反向思维<br>
+                    <div class="example-title">智能手表踩雷实录｜这些坑千万别踩</div>
+                </li>
+            </div>
+        </div>
+
+        <!-- 标签使用策略 -->
+        <div class="card">
+            <h2>🏷️ 标签使用策略</h2>
+            <div style="margin: 16px 0;">
+                <strong style="color: #ff4d4f;">必用标签：</strong>
+                <div class="tags" style="margin-top: 8px;">
+                    <span class="tag hot">#测评</span>
+                    <span class="tag hot">#真实体验</span>
+                    <span class="tag hot">#种草</span>
+                </div>
+            </div>
+            <div style="margin: 16px 0;">
+                <strong style="color: #1890ff;">推荐标签：</strong>
+                <div class="tags" style="margin-top: 8px;">
+                    <span class="tag">#新手指南</span>
+                    <span class="tag">#避坑</span>
+                    <span class="tag">#干货分享</span>
+                    <span class="tag">#对比</span>
+                </div>
+            </div>
+            <div style="background: #e6f7ff; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                <strong>💡 标签使用建议</strong>
+                <ul style="margin: 8px 0 0 20px; color: #666; line-height: 1.8;">
+                    <li>至少包含3个热门标签以获得曝光</li>
+                    <li>添加小众标签以精准触达目标用户</li>
+                    <li>结合当下热点话题标签</li>
+                    <li>避免使用无关标签，影响推荐精准度</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 成功率预测 -->
+        <div class="card">
+            <h2>🏆 成功率预测</h2>
+            <p style="font-size: 16px; margin-bottom: 8px;"><strong>综合成功率</strong></p>
+            <div class="progress">
+                <div class="progress-bar" style="width: 75%; background: #52c41a;">75%</div>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <div style="margin-bottom: 12px;">
+                    <span style="color: #999; font-size: 14px;">竞争指数</span>
+                    <div class="progress" style="height: 16px;">
+                        <div class="progress-bar" style="width: 65%; background: #ff4d4f; font-size: 12px;">65%</div>
+                    </div>
+                </div>
+                <div>
+                    <span style="color: #999; font-size: 14px;">机会指数</span>
+                    <div class="progress" style="height: 16px;">
+                        <div class="progress-bar" style="width: 85%; background: #52c41a; font-size: 12px;">85%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f6ffed; border: 1px solid #b7eb8f; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                <p style="color: #52c41a; font-weight: bold;">该领域机会很大，强烈推荐创作相关内容</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px;">
+                <div style="background: #f6ffed; padding: 16px; border-radius: 8px;">
+                    <strong style="color: #52c41a;">积极因素</strong>
+                    <ul style="margin: 8px 0 0 20px; font-size: 13px; color: #666;">
+                        <li>用户互动意愿强</li>
+                        <li>话题标签丰富</li>
+                        <li>内容类型多样</li>
+                    </ul>
+                </div>
+                <div style="background: #fff7e6; padding: 16px; border-radius: 8px;">
+                    <strong style="color: #faad14;">注意事项</strong>
+                    <ul style="margin: 8px 0 0 20px; font-size: 13px; color: #666;">
+                        <li>市场竞争激烈</li>
+                        <li>需要高质量内容</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 说明 -->
+        <div class="card" style="background: #e6f7ff;">
+            <h2 style="color: #1890ff;">ℹ️ 使用说明</h2>
+            <p style="line-height: 1.8; color: #666;">
+                这是小红书热点领域深度分析功能的<strong>静态演示界面</strong>。<br><br>
+
+                <strong>实际功能包括：</strong><br>
+                ✅ 输入任何领域，实时采集最新数据<br>
+                ✅ AI智能分析热点趋势和爆款特征<br>
+                ✅ 生成个性化创作建议和标题模板<br>
+                ✅ 预测内容成功率<br>
+                ✅ 支持AI深度洞察（需配置OpenAI API）<br><br>
+
+                <strong>要运行完整功能，请：</strong><br>
+                1. 安装所有依赖：<code style="background: white; padding: 2px 6px; border-radius: 4px;">pip install -r backend/requirements.txt</code><br>
+                2. 启动后端：<code style="background: white; padding: 2px 6px; border-radius: 4px;">cd backend && uvicorn app.main:app --reload</code><br>
+                3. 启动前端：<code style="background: white; padding: 2px 6px; border-radius: 4px;">cd frontend && npm run dev</code><br>
+                4. 访问：<a href="http://localhost:5173/xiaohongshu" style="color: #1890ff;">http://localhost:5173/xiaohongshu</a>
+            </p>
+        </div>
+
+        <div style="text-align: center; color: white; padding: 20px; font-size: 14px;">
+            Hardware Insight © 2024 - 小红书热点分析工具
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.btn').addEventListener('click', function() {
+            alert('这是静态演示页面。要体验完整功能，请按照说明启动完整服务！');
+        });
+
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelector('.search-box').value = this.textContent.replace(/^\d+/, '').trim();
+            });
+        });
+    </script>
+</body>
+</html>
