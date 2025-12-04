@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StepFun AI OS - 原型图集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 50px;
+        }
+
+        .prototype-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .phone-frame {
+            background: #000;
+            border-radius: 45px;
+            padding: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            aspect-ratio: 9/19.5;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 10;
+        }
+
+        .phone-screen {
+            background: #f5f5f7;
+            height: 100%;
+            border-radius: 35px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            background: rgba(255,255,255,0.98);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .time {
+            margin-left: 60px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 5px;
+        }
+
+        /* Agent Launcher 桌面 */
+        .desktop {
+            padding: 20px;
+            height: calc(100% - 44px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #86868b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        /* 动态任务区 */
+        .dynamic-task-zone {
+            flex: 0 0 auto;
+        }
+
+        .task-cards {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            min-width: 320px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .task-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d1d1f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-icon {
+            font-size: 20px;
+        }
+
+        .task-menu {
+            color: #86868b;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .task-content {
+            margin-bottom: 15px;
+        }
+
+        .task-description {
+            font-size: 14px;
+            color: #6e6e73;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e8e8ed;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            animation: progress 2s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0%, 100% { width: 45%; }
+            50% { width: 75%; }
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #86868b;
+        }
+
+        .highlight-previews {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .highlight-thumb {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-thumb::after {
+            content: '⚡️';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 16px;
+        }
+
+        .video-preview {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* 创作区 */
+        .creative-zone {
+            flex: 0 0 auto;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .icon-camera { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .icon-photos { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .icon-video { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .icon-social { background: linear-gradient(135deg, #fa709a, #fee140); }
+
+        .app-name {
+            font-size: 11px;
+            color: #1d1d1f;
+            text-align: center;
+        }
+
+        /* 固定区 */
+        .fixed-zone {
+            flex: 1;
+        }
+
+        .fixed-apps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .icon-wechat { background: linear-gradient(135deg, #09bb07, #06a305); }
+        .icon-alipay { background: linear-gradient(135deg, #1677ff, #1890ff); }
+        .icon-settings { background: linear-gradient(135deg, #86868b, #6e6e73); }
+
+        /* Task Chain Viewer */
+        .task-chain-viewer {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            height: calc(100% - 64px);
+            margin: 20px;
+            overflow-y: auto;
+        }
+
+        .viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e8e8ed;
+        }
+
+        .viewer-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d1d1f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            background: #f5f5f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .task-chain-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chain-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f5f5f7;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .chain-item.completed {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .chain-item.in-progress {
+            background: rgba(102, 126, 234, 0.2);
+            border: 2px solid #667eea;
+        }
+
+        .chain-status-icon {
+            font-size: 24px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .chain-info {
+            flex: 1;
+        }
+
+        .chain-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+        }
+
+        .chain-time {
+            font-size: 12px;
+            color: #86868b;
+        }
+
+        .chain-progress {
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        /* Prototype Card */
+        .prototype-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .prototype-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prototype-description {
+            font-size: 14px;
+            color: #6e6e73;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .priority-s {
+            background: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+        }
+
+        .priority-a {
+            background: rgba(255, 149, 0, 0.1);
+            color: #ff9500;
+        }
+
+        .priority-b {
+            background: rgba(52, 199, 89, 0.1);
+            color: #34c759;
+        }
+
+        /* Flow Diagram */
+        .flow-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .flow-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flow-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .flow-content {
+            flex: 1;
+            padding: 15px 20px;
+            background: #f5f5f7;
+            border-radius: 12px;
+        }
+
+        .flow-label {
+            font-size: 12px;
+            color: #86868b;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .flow-text {
+            font-size: 15px;
+            color: #1d1d1f;
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            color: #667eea;
+            font-size: 24px;
+            margin: -5px 0;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .nav-btn {
+            padding: 12px 30px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Music Selector */
+        .music-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f5f5f7;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .music-icon {
+            font-size: 20px;
+        }
+
+        .music-info {
+            flex: 1;
+        }
+
+        .music-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .music-duration {
+            font-size: 11px;
+            color: #86868b;
+        }
+
+        /* Generated Content */
+        .generated-content {
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+
+        .content-label {
+            font-size: 12px;
+            color: #86868b;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .content-text {
+            font-size: 14px;
+            color: #1d1d1f;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .hashtags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .hashtag {
+            padding: 4px 10px;
+            background: white;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>StepFun AI OS 原型图集</h1>
+        <p class="subtitle">新一代 AI 原生操作系统 - 智能创作场景 Demo</p>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showSection('flow')">完整流程</button>
+            <button class="nav-btn" onclick="showSection('screens')">核心界面</button>
+            <button class="nav-btn" onclick="showSection('chain')">任务链详情</button>
+        </div>
+
+        <!-- Flow Section -->
+        <div id="flow" class="content-section active">
+            <div class="flow-section">
+                <div class="flow-title">📱 端到端用户体验流程</div>
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="flow-number">1</div>
+                        <div class="flow-content">
+                            <div class="flow-label">用户操作</div>
+                            <div class="flow-text">用户打开相机，拍摄 15 秒旅行 vlog</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">2</div>
+                        <div class="flow-content">
+                            <div class="flow-label">AI 感知</div>
+                            <div class="flow-text">系统自动检测拍摄结束，触发内容分析</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">3</div>
+                        <div class="flow-content">
+                            <div class="flow-label">返回桌面 - Aha Moment 1</div>
+                            <div class="flow-text">"我还没点，系统就开始处理了" - Agent Launcher 自动插入任务卡片</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">4</div>
+                        <div class="flow-content">
+                            <div class="flow-label">任务 A 完成 (2.3s)</div>
+                            <div class="flow-text">卡片更新："⚡️ 为你挑了 3 个精彩瞬间" + Live 图预览</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">5</div>
+                        <div class="flow-content">
+                            <div class="flow-label">用户交互</div>
+                            <div class="flow-text">用户点击查看 Live 图，浏览 5 秒</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">6</div>
+                        <div class="flow-content">
+                            <div class="flow-label">AI 感知 - Aha Moment 2</div>
+                            <div class="flow-text">"它知道我在看这些照片" - 检测浏览行为，插入合成建议卡片</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">7</div>
+                        <div class="flow-content">
+                            <div class="flow-label">用户确认</div>
+                            <div class="flow-text">用户点击"开始合成"</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">8</div>
+                        <div class="flow-content">
+                            <div class="flow-label">任务 B 执行 - Aha Moment 3</div>
+                            <div class="flow-text">"它自己就帮我合成好了，还配好音乐" - 视频合成中 (12s)</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">9</div>
+                        <div class="flow-content">
+                            <div class="flow-label">任务 B 完成 - Aha Moment 4</div>
+                            <div class="flow-text">"连标题都写好了" - 显示视频预览 + 发布建议 + 自动生成文案</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">10</div>
+                        <div class="flow-content">
+                            <div class="flow-label">用户确认</div>
+                            <div class="flow-text">用户点击"立即发布"</div>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow">↓</div>
+
+                    <div class="flow-step">
+                        <div class="flow-number">11</div>
+                        <div class="flow-content">
+                            <div class="flow-label">任务 D 完成</div>
+                            <div class="flow-text">✅ 发布成功！内容已同步到小红书</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screens Section -->
+        <div id="screens" class="content-section">
+            <div class="prototype-grid">
+                <!-- Screen 1: 初始桌面 -->
+                <div class="prototype-card">
+                    <div class="prototype-title">
+                        <span>📱</span>
+                        界面 1: Agent Launcher 桌面（初始状态）
+                    </div>
+                    <div class="priority-badge priority-s">S级优先级</div>
+                    <div class="prototype-description">
+                        展示 AI 桌面的三层结构：动态任务区（空）、创作区、固定区。这是用户拍摄前的初始状态。
+                    </div>
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span class="time">9:41</span>
+                                <div class="status-icons">
+                                    <span>📶</span>
+                                    <span>📡</span>
+                                    <span>🔋</span>
+                                </div>
+                            </div>
+                            <div class="desktop">
+                                <!-- 动态任务区（空） -->
+                                <div class="dynamic-task-zone">
+                                    <div class="section-title">🔴 智能任务</div>
+                                    <div style="text-align: center; padding: 20px; color: #86868b; font-size: 14px;">
+                                        暂无任务
+                                    </div>
+                                </div>
+
+                                <!-- 创作区 -->
+                                <div class="creative-zone">
+                                    <div class="section-title">🟡 创作工具</div>
+                                    <div class="app-grid">
+                                        <div class="app-icon">
+                                            <div class="icon icon-camera">📷</div>
+                                            <div class="app-name">相机</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-photos">🖼</div>
+                                            <div class="app-name">相册</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-video">🎬</div>
+                                            <div class="app-name">剪映</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-social">📱</div>
+                                            <div class="app-name">小红书</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 固定区 -->
+                                <div class="fixed-zone">
+                                    <div class="section-title">⚪️ 常用应用</div>
+                                    <div class="fixed-apps">
+                                        <div class="app-icon">
+                                            <div class="icon icon-wechat">💬</div>
+                                            <div class="app-name">微信</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-alipay">💳</div>
+                                            <div class="app-name">支付宝</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-settings">⚙️</div>
+                                            <div class="app-name">设置</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screen 2: 高光提取中 -->
+                <div class="prototype-card">
+                    <div class="prototype-title">
+                        <span>⚡️</span>
+                        界面 2: 高光提取中
+                    </div>
+                    <div class="priority-badge priority-s">S级优先级</div>
+                    <div class="prototype-description">
+                        用户拍摄结束返回桌面后，AI 自动感知并插入任务卡片。展示"主动服务"能力 - Aha Moment 1。
+                    </div>
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span class="time">9:42</span>
+                                <div class="status-icons">
+                                    <span>📶</span>
+                                    <span>📡</span>
+                                    <span>🔋</span>
+                                </div>
+                            </div>
+                            <div class="desktop">
+                                <div class="dynamic-task-zone">
+                                    <div class="section-title">🔴 智能任务</div>
+                                    <div class="task-cards">
+                                        <div class="task-card">
+                                            <div class="task-header">
+                                                <div class="task-title">
+                                                    <span class="task-icon">⚡️</span>
+                                                    正在分析你的视频
+                                                </div>
+                                                <div class="task-menu">⋯</div>
+                                            </div>
+                                            <div class="task-content">
+                                                <div class="task-description">
+                                                    AI 正在识别精彩瞬间...
+                                                </div>
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill"></div>
+                                                </div>
+                                                <div class="progress-text">预计还需 2 秒</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="creative-zone">
+                                    <div class="section-title">🟡 创作工具</div>
+                                    <div class="app-grid">
+                                        <div class="app-icon">
+                                            <div class="icon icon-camera">📷</div>
+                                            <div class="app-name">相机</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-photos">🖼</div>
+                                            <div class="app-name">相册</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-video">🎬</div>
+                                            <div class="app-name">剪映</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-social">📱</div>
+                                            <div class="app-name">小红书</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screen 3: 高光提取完成 -->
+                <div class="prototype-card">
+                    <div class="prototype-title">
+                        <span>✨</span>
+                        界面 3: 高光提取完成
+                    </div>
+                    <div class="priority-badge priority-s">S级优先级</div>
+                    <div class="prototype-description">
+                        任务 A 完成，卡片自动更新显示 3 个精彩 Live 图预览。展示"主动服务策略 1"。
+                    </div>
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span class="time">9:42</span>
+                                <div class="status-icons">
+                                    <span>📶</span>
+                                    <span>📡</span>
+                                    <span>🔋</span>
+                                </div>
+                            </div>
+                            <div class="desktop">
+                                <div class="dynamic-task-zone">
+                                    <div class="section-title">🔴 智能任务</div>
+                                    <div class="task-cards">
+                                        <div class="task-card">
+                                            <div class="task-header">
+                                                <div class="task-title">
+                                                    <span class="task-icon">⚡️</span>
+                                                    为你挑了 3 个精彩瞬间
+                                                </div>
+                                                <div class="task-menu">⋯</div>
+                                            </div>
+                                            <div class="task-content">
+                                                <div class="highlight-previews">
+                                                    <div class="highlight-thumb"></div>
+                                                    <div class="highlight-thumb"></div>
+                                                    <div class="highlight-thumb"></div>
+                                                </div>
+                                            </div>
+                                            <div class="task-actions">
+                                                <button class="btn btn-primary">查看全部</button>
+                                                <button class="btn btn-secondary">保存</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="creative-zone">
+                                    <div class="section-title">🟡 创作工具</div>
+                                    <div class="app-grid">
+                                        <div class="app-icon">
+                                            <div class="icon icon-camera">📷</div>
+                                            <div class="app-name">相机</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-photos">🖼</div>
+                                            <div class="app-name">相册</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-video">🎬</div>
+                                            <div class="app-name">剪映</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-social">📱</div>
+                                            <div class="app-name">小红书</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screen 4: 视频合成建议 -->
+                <div class="prototype-card">
+                    <div class="prototype-title">
+                        <span>🎬</span>
+                        界面 4: 视频合成建议
+                    </div>
+                    <div class="priority-badge priority-s">S级优先级</div>
+                    <div class="prototype-description">
+                        用户浏览 Live 图 ≥3 秒后，AI 检测到行为意图，主动插入合成建议卡片 - Aha Moment 2。
+                    </div>
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span class="time">9:43</span>
+                                <div class="status-icons">
+                                    <span>📶</span>
+                                    <span>📡</span>
+                                    <span>🔋</span>
+                                </div>
+                            </div>
+                            <div class="desktop">
+                                <div class="dynamic-task-zone">
+                                    <div class="section-title">🔴 智能任务</div>
+                                    <div class="task-cards">
+                                        <div class="task-card">
+                                            <div class="task-header">
+                                                <div class="task-title">
+                                                    <span class="task-icon">🎬</span>
+                                                    合成高光视频？
+                                                </div>
+                                                <div class="task-menu">⋯</div>
+                                            </div>
+                                            <div class="task-content">
+                                                <div class="task-description">
+                                                    要不要把这些精彩瞬间<br>合成一段高光视频？
+                                                </div>
+                                                <div class="music-selector">
+                                                    <span class="music-icon">🎵</span>
+                                                    <div class="music-info">
+                                                        <div class="music-name">夏日回忆</div>
+                                                        <div class="music-duration">热门 BGM · 15 秒</div>
+                                                    </div>
+                                                    <span>›</span>
+                                                </div>
+                                            </div>
+                                            <div class="task-actions">
+                                                <button class="btn btn-primary">开始合成</button>
+                                                <button class="btn btn-secondary">自定义</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="creative-zone">
+                                    <div class="section-title">🟡 创作工具</div>
+                                    <div class="app-grid">
+                                        <div class="app-icon">
+                                            <div class="icon icon-camera">📷</div>
+                                            <div class="app-name">相机</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-photos">🖼</div>
+                                            <div class="app-name">相册</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-video">🎬</div>
+                                            <div class="app-name">剪映</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-social">📱</div>
+                                            <div class="app-name">小红书</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screen 5: 视频合成中 -->
+                <div class="prototype-card">
+                    <div class="prototype-title">
+                        <span>🎞</span>
+                        界面 5: 视频合成中
+                    </div>
+                    <div class="priority-badge priority-a">A级优先级</div>
+                    <div class="prototype-description">
+                        任务 B 执行中，展示视频合成进度。用户可点击查看详细任务链 - Aha Moment 3。
+                    </div>
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span class="time">9:43</span>
+                                <div class="status-icons">
+                                    <span>📶</span>
+                                    <span>📡</span>
+                                    <span>🔋</span>
+                                </div>
+                            </div>
+                            <div class="desktop">
+                                <div class="dynamic-task-zone">
+                                    <div class="section-title">🔴 智能任务</div>
+                                    <div class="task-cards">
+                                        <div class="task-card">
+                                            <div class="task-header">
+                                                <div class="task-title">
+                                                    <span class="task-icon">🎞</span>
+                                                    视频合成中
+                                                </div>
+                                                <div class="task-menu" style="cursor: pointer;" title="查看任务链">📊</div>
+                                            </div>
+                                            <div class="task-content">
+                                                <div class="task-description">
+                                                    正在为你合成高光视频...<br>
+                                                    已完成：片段剪辑、音乐配置
+                                                </div>
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" style="width: 65%; animation: none;"></div>
+                                                </div>
+                                                <div class="progress-text">65% · 预计还需 5 秒</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="creative-zone">
+                                    <div class="section-title">🟡 创作工具</div>
+                                    <div class="app-grid">
+                                        <div class="app-icon">
+                                            <div class="icon icon-camera">📷</div>
+                                            <div class="app-name">相机</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-photos">🖼</div>
+                                            <div class="app-name">相册</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-video">🎬</div>
+                                            <div class="app-name">剪映</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-social">📱</div>
+                                            <div class="app-name">小红书</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screen 6: 视频完成 + 发布建议 -->
+                <div class="prototype-card">
+                    <div class="prototype-title">
+                        <span>✅</span>
+                        界面 6: 视频完成 + 发布建议
+                    </div>
+                    <div class="priority-badge priority-s">S级优先级</div>
+                    <div class="prototype-description">
+                        任务 B 完成，展示视频预览并主动建议发布到小红书，包含 AI 生成的标题和话题 - Aha Moment 4。
+                    </div>
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span class="time">9:43</span>
+                                <div class="status-icons">
+                                    <span>📶</span>
+                                    <span>📡</span>
+                                    <span>🔋</span>
+                                </div>
+                            </div>
+                            <div class="desktop">
+                                <div class="dynamic-task-zone">
+                                    <div class="section-title">🔴 智能任务</div>
+                                    <div class="task-cards">
+                                        <div class="task-card">
+                                            <div class="task-header">
+                                                <div class="task-title">
+                                                    <span class="task-icon">✅</span>
+                                                    你的高光视频准备好了
+                                                </div>
+                                                <div class="task-menu">⋯</div>
+                                            </div>
+                                            <div class="task-content">
+                                                <div class="video-preview">▶️</div>
+                                                <div class="generated-content">
+                                                    <div class="content-label">AI 为你生成的标题和话题</div>
+                                                    <div class="content-text">
+                                                        夏日旅行 vlog ☀️ 记录最美的瞬间
+                                                    </div>
+                                                    <div class="hashtags">
+                                                        <span class="hashtag">#旅行vlog</span>
+                                                        <span class="hashtag">#夏日记忆</span>
+                                                        <span class="hashtag">#生活记录</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="task-actions">
+                                                <button class="btn btn-primary">发到小红书</button>
+                                                <button class="btn btn-secondary">编辑</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="creative-zone">
+                                    <div class="section-title">🟡 创作工具</div>
+                                    <div class="app-grid">
+                                        <div class="app-icon">
+                                            <div class="icon icon-camera">📷</div>
+                                            <div class="app-name">相机</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-photos">🖼</div>
+                                            <div class="app-name">相册</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-video">🎬</div>
+                                            <div class="app-name">剪映</div>
+                                        </div>
+                                        <div class="app-icon">
+                                            <div class="icon icon-social">📱</div>
+                                            <div class="app-name">小红书</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Chain Section -->
+        <div id="chain" class="content-section">
+            <div class="prototype-grid">
+                <div class="prototype-card">
+                    <div class="prototype-title">
+                        <span>📊</span>
+                        界面 7: Task Chain Viewer（任务链展示）
+                    </div>
+                    <div class="priority-badge priority-b">B级优先级</div>
+                    <div class="prototype-description">
+                        点击任务卡片右上角的"📊"图标后展开的任务链详情视图。类似 DeepResearch 的 Chain of Thought 展示，让投资人看懂技术含金量。展示完整的任务编排和工具调用链路。
+                    </div>
+                    <div class="phone-frame">
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen">
+                            <div class="status-bar">
+                                <span class="time">9:43</span>
+                                <div class="status-icons">
+                                    <span>📶</span>
+                                    <span>📡</span>
+                                    <span>🔋</span>
+                                </div>
+                            </div>
+                            <div class="task-chain-viewer">
+                                <div class="viewer-header">
+                                    <div class="viewer-title">
+                                        <span>📊</span>
+                                        任务链状态
+                                    </div>
+                                    <div class="close-btn">✕</div>
+                                </div>
+
+                                <div class="task-chain-list">
+                                    <div class="chain-item completed">
+                                        <div class="chain-status-icon">✅</div>
+                                        <div class="chain-info">
+                                            <div class="chain-name">高光切片识别</div>
+                                            <div class="chain-time">2.3 秒 · 已完成</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="chain-item completed">
+                                        <div class="chain-status-icon">✅</div>
+                                        <div class="chain-info">
+                                            <div class="chain-name">Live 图生成</div>
+                                            <div class="chain-time">1.8 秒 · 已完成</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="chain-item completed">
+                                        <div class="chain-status-icon">✅</div>
+                                        <div class="chain-info">
+                                            <div class="chain-name">用户浏览行为分析</div>
+                                            <div class="chain-time">0.5 秒 · 已完成</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="chain-item in-progress">
+                                        <div class="chain-status-icon">🔄</div>
+                                        <div class="chain-info">
+                                            <div class="chain-name">视频片段合成</div>
+                                            <div class="chain-progress">65% · 进行中</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="chain-item">
+                                        <div class="chain-status-icon">⏸</div>
+                                        <div class="chain-info">
+                                            <div class="chain-name">配乐推荐与匹配</div>
+                                            <div class="chain-time">等待中</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="chain-item">
+                                        <div class="chain-status-icon">⏸</div>
+                                        <div class="chain-info">
+                                            <div class="chain-name">视频封面生成</div>
+                                            <div class="chain-time">等待中</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="chain-item">
+                                        <div class="chain-status-icon">⏸</div>
+                                        <div class="chain-info">
+                                            <div class="chain-name">内容文案生成</div>
+                                            <div class="chain-time">等待中</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="chain-item">
+                                        <div class="chain-status-icon">⏹</div>
+                                        <div class="chain-info">
+                                            <div class="chain-name">小红书发布</div>
+                                            <div class="chain-time">未开始</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 20px; padding: 15px; background: rgba(102, 126, 234, 0.1); border-radius: 12px;">
+                                    <div style="font-size: 12px; color: #667eea; font-weight: 600; margin-bottom: 8px;">
+                                        💡 技术亮点
+                                    </div>
+                                    <div style="font-size: 13px; color: #1d1d1f; line-height: 1.5;">
+                                        • 8 个任务自动编排<br>
+                                        • 无需用户干预<br>
+                                        • 端到端工具链调用
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Architecture Diagram -->
+                <div class="prototype-card" style="grid-column: 1 / -1;">
+                    <div class="prototype-title">
+                        <span>🏗</span>
+                        技术架构层次图
+                    </div>
+                    <div class="priority-badge priority-a">A级优先级</div>
+                    <div class="prototype-description">
+                        展示 AI OS 的五层架构：用户界面层 → 感知推理层 → 任务编排层 → 工具层 → OS 能力层
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <div style="display: flex; flex-direction: column; gap: 15px;">
+                            <!-- Layer 1 -->
+                            <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; border-radius: 15px; color: white;">
+                                <div style="font-weight: 600; margin-bottom: 10px; font-size: 16px;">
+                                    Layer 1: User Interface
+                                </div>
+                                <div style="font-size: 13px; opacity: 0.9;">
+                                    Agent Launcher + Dynamic Task Cards
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; color: #667eea; font-size: 24px;">↓</div>
+
+                            <!-- Layer 2 -->
+                            <div style="background: linear-gradient(135deg, #f093fb, #f5576c); padding: 20px; border-radius: 15px; color: white;">
+                                <div style="font-weight: 600; margin-bottom: 10px; font-size: 16px;">
+                                    Layer 2: Perception & Reasoning
+                                </div>
+                                <div style="font-size: 13px; opacity: 0.9;">
+                                    内容理解 (Vision Model) • 行为感知 (Behavior Tracker) • 意图推理 (Intent Classifier)
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; color: #667eea; font-size: 24px;">↓</div>
+
+                            <!-- Layer 3 -->
+                            <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); padding: 20px; border-radius: 15px; color: white;">
+                                <div style="font-weight: 600; margin-bottom: 10px; font-size: 16px;">
+                                    Layer 3: Task Orchestration
+                                </div>
+                                <div style="font-size: 13px; opacity: 0.9;">
+                                    Task Dispatcher (任务分发) • Dependency Manager (依赖管理) • State Machine (状态机)
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; color: #667eea; font-size: 24px;">↓</div>
+
+                            <!-- Layer 4 -->
+                            <div style="background: linear-gradient(135deg, #fa709a, #fee140); padding: 20px; border-radius: 15px; color: white;">
+                                <div style="font-weight: 600; margin-bottom: 10px; font-size: 16px;">
+                                    Layer 4: Tooling
+                                </div>
+                                <div style="font-size: 13px; opacity: 0.9;">
+                                    高光提取 • Live图生成 • 视频合成 • 配乐推荐 • 文案生成 • 一键发布
+                                </div>
+                            </div>
+
+                            <div style="text-align: center; color: #667eea; font-size: 24px;">↓</div>
+
+                            <!-- Layer 5 -->
+                            <div style="background: linear-gradient(135deg, #86868b, #6e6e73); padding: 20px; border-radius: 15px; color: white;">
+                                <div style="font-weight: 600; margin-bottom: 10px; font-size: 16px;">
+                                    Layer 5: OS Capability
+                                </div>
+                                <div style="font-size: 13px; opacity: 0.9;">
+                                    文件系统 • 网络 • 媒体编解码 • 系统权限
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update nav buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
