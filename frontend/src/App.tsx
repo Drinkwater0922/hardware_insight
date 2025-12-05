@@ -4,6 +4,8 @@ import { ConfigProvider, theme } from 'antd';
 import HomePage from './pages/HomePage';
 import ReportPage from './pages/ReportPage';
 import HistoryPage from './pages/HistoryPage';
+import FirstLaunchExperience from './pages/FirstLaunchExperience';
+import './styles/firstLaunch.css';
 
 const App: React.FC = () => {
   return (
@@ -20,6 +22,7 @@ const App: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/report/:id" element={<ReportPage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path="/first-launch" element={<FirstLaunchExperience />} />
         </Routes>
       </Router>
     </ConfigProvider>

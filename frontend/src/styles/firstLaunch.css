@@ -1,0 +1,280 @@
+/* 首次开机体验样式 */
+
+/* 卡片动画 */
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-animated {
+  animation: cardSlideIn 0.5s ease-out;
+}
+
+/* 渐变背景动画 */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-animated {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.pulse-animated {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* 新记录徽章动画 */
+@keyframes badgeBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.badge-bounce {
+  animation: badgeBounce 0.5s ease-in-out;
+}
+
+/* 卡片悬停效果 */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 灵感趋势卡片样式 */
+.inspiration-trends-card .main-inspiration {
+  transition: transform 0.3s ease;
+}
+
+.inspiration-trends-card .main-inspiration:hover {
+  transform: scale(1.02);
+}
+
+.related-inspiration {
+  transition: all 0.3s ease;
+}
+
+/* 用户记忆卡片高光效果 */
+@keyframes borderGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(82, 196, 26, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(82, 196, 26, 0.6);
+  }
+}
+
+.user-memory-card[style*="border: 2px solid #52c41a"] {
+  animation: borderGlow 2s ease-in-out infinite;
+}
+
+/* 创作卡片进度动画 */
+.creation-progress {
+  transition: width 0.5s ease;
+}
+
+/* 检查清单项动画 */
+@keyframes checklistComplete {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.checklist-item-completed {
+  animation: checklistComplete 0.5s ease;
+}
+
+/* 模态框淡入 */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.ant-modal-content {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+/* 兴趣选择卡片效果 */
+.interest-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interest-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* 标签动画 */
+@keyframes tagFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.tag-float {
+  animation: tagFloat 2s ease-in-out infinite;
+}
+
+/* 渐变文字效果 */
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 加载动画 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* 淡入淡出 */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 滑动进入 */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.4s ease-out;
+}
+
+/* 滑动离开 */
+@keyframes slideOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+}
+
+.slide-out-left {
+  animation: slideOutLeft 0.4s ease-out;
+}
+
+/* 按钮悬停效果 */
+.btn-primary-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary-gradient:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* 成功动画 */
+@keyframes successBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: scale(1.1);
+  }
+  20%, 40%, 60%, 80% {
+    transform: scale(0.9);
+  }
+}
+
+.success-bounce {
+  animation: successBounce 0.8s ease;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .inspiration-trends-card,
+  .user-memory-card,
+  .creation-card {
+    margin-bottom: 16px;
+  }
+
+  .main-inspiration {
+    padding: 12px !important;
+  }
+}
+
+/* 深色模式支持（预留） */
+@media (prefers-color-scheme: dark) {
+  /* 深色模式样式可以在这里添加 */
+}

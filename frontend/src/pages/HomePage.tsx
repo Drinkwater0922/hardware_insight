@@ -86,9 +86,22 @@ const HomePage: React.FC = () => {
               Hardware Insight
             </Title>
           </Space>
-          <Button icon={<HistoryOutlined />} onClick={() => navigate('/history')}>
-            历史记录
-          </Button>
+          <Space>
+            <Button
+              type="primary"
+              icon={<RocketOutlined />}
+              onClick={() => navigate('/first-launch')}
+              style={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                border: 'none',
+              }}
+            >
+              首次开机体验
+            </Button>
+            <Button icon={<HistoryOutlined />} onClick={() => navigate('/history')}>
+              历史记录
+            </Button>
+          </Space>
         </div>
       </Header>
 
