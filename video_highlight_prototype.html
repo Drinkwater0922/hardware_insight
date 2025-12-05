@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频精彩瞬间提取 - 高保真原型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .prototype-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: #000;
+            border-radius: 50px;
+            box-shadow: 0 0 0 12px #1c1c1e, 0 0 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .phone-frame:hover {
+            transform: scale(1.02);
+        }
+
+        .phone-frame.active {
+            box-shadow: 0 0 0 12px #1c1c1e, 0 0 60px rgba(0, 122, 255, 0.6);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            position: relative;
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* 状态栏 */
+        .status-bar {
+            height: 54px;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .status-bar .time {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .status-bar .indicators {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        /* 灵动岛 */
+        .dynamic-island {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            border-radius: 24px;
+            height: 37px;
+            width: 126px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dynamic-island.expanded {
+            width: 350px;
+            height: 80px;
+            border-radius: 40px;
+            padding: 12px 20px;
+        }
+
+        .island-content {
+            display: none;
+            width: 100%;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .island-content.active {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .island-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #333;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .island-text {
+            flex: 1;
+        }
+
+        .island-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .island-subtitle {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* 通知栏 */
+        .notification {
+            position: absolute;
+            top: 60px;
+            left: 16px;
+            right: 16px;
+            background: rgba(120, 120, 128, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 99;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .notification-content {
+            flex: 1;
+            color: #fff;
+        }
+
+        .notification-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* 相机界面 */
+        .camera-screen {
+            background: #f0f0f0;
+        }
+
+        .camera-preview {
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .camera-status {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .camera-status-title {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .camera-status-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ff3b30;
+        }
+
+        .camera-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shutter-button {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .shutter-button-inner {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        .shutter-button.recording .shutter-button-inner {
+            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            background: #ff3b30;
+        }
+
+        /* 桌面 */
+        .desktop-screen {
+            background: #f2f2f7;
+            padding-top: 54px;
+        }
+
+        .agent-area {
+            margin: 16px;
+            background: #e5e5ea;
+            border-radius: 20px;
+            padding: 60px 20px;
+            text-align: center;
+            color: #666;
+            font-size: 15px;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .content-card {
+            background: #fff;
+            border-radius: 16px;
+            aspect-ratio: 1;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .content-card.creating {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .content-card .thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .content-card .badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ff3b30;
+            color: #fff;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .content-card .status-text {
+            font-size: 13px;
+            color: #ff3b30;
+            font-weight: 500;
+        }
+
+        .live-badge {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .stack-indicator {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .stack-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* 底部导航 */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 24px;
+        }
+
+        .nav-item {
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        /* 对话框 */
+        .dialog-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .dialog-overlay.show {
+            display: flex;
+        }
+
+        .dialog {
+            background: rgba(120, 120, 128, 0.95);
+            backdrop-filter: blur(40px);
+            border-radius: 24px;
+            width: 340px;
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+
+        .dialog-overlay.show .dialog {
+            transform: scale(1);
+        }
+
+        .dialog-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+        }
+
+        .dialog-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .dialog-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .dialog-preview {
+            margin: 0 20px 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #e5e5ea;
+            aspect-ratio: 16/9;
+        }
+
+        .dialog-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dialog-actions {
+            display: flex;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dialog-button {
+            flex: 1;
+            padding: 16px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dialog-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .dialog-button:not(:last-child) {
+            border-right: 0.5px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dialog-button.primary {
+            font-weight: 600;
+            color: #fff;
+            background: #000;
+        }
+
+        /* Live相册页面 */
+        .live-album-screen {
+            background: #000;
+        }
+
+        .album-header {
+            padding: 60px 24px 20px;
+            color: #fff;
+        }
+
+        .album-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .album-count {
+            font-size: 15px;
+            opacity: 0.6;
+        }
+
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            padding: 20px 0;
+        }
+
+        .album-item {
+            aspect-ratio: 1;
+            background: #1c1c1e;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .album-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .album-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* 照片详情页 */
+        .photo-detail-screen {
+            background: #000;
+        }
+
+        .photo-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 54px 24px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #fff;
+        }
+
+        .back-button {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .photo-datetime {
+            font-size: 15px;
+        }
+
+        .photo-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-content img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .photo-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 24px 40px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .footer-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Stepfun处理页面 */
+        .stepfun-screen {
+            background: #fff;
+            padding-top: 54px;
+        }
+
+        .stepfun-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stepfun-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .stepfun-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .stepfun-content {
+            padding: 0 24px;
+        }
+
+        .stepfun-intro {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 32px;
+        }
+
+        .step-item {
+            margin-bottom: 32px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .step-indicator {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e5e5ea;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .step-indicator.completed {
+            background: #34c759;
+            color: #fff;
+        }
+
+        .step-indicator.loading {
+            background: #007aff;
+            color: #fff;
+        }
+
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .step-detail {
+            background: #f5f5f7;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .step-detail-icon {
+            font-size: 24px;
+        }
+
+        .step-detail-text {
+            flex: 1;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .step-detail-path {
+            font-family: 'SF Mono', Monaco, monospace;
+            color: #333;
+            margin-top: 4px;
+        }
+
+        .processing-indicator {
+            position: fixed;
+            bottom: 120px;
+            left: 24px;
+            right: 24px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .processing-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f5f5f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .processing-text {
+            flex: 1;
+        }
+
+        .processing-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .processing-time {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .processing-more {
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        /* 任务列表页面 */
+        .task-list-screen {
+            background: #f2f2f7;
+            padding-top: 54px;
+        }
+
+        .task-header {
+            padding: 20px 24px;
+            background: #fff;
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .task-header-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .task-tabs {
+            display: flex;
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .task-tab {
+            font-size: 15px;
+            color: #666;
+            padding-bottom: 8px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .task-tab.active {
+            color: #000;
+            border-bottom-color: #000;
+            font-weight: 600;
+        }
+
+        .task-section {
+            padding: 16px 24px;
+        }
+
+        .task-section-title {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .task-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .task-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .task-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f5f5f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .task-card-info {
+            flex: 1;
+        }
+
+        .task-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .task-card-status {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .task-card-status.processing {
+            color: #007aff;
+        }
+
+        .task-card-progress {
+            height: 4px;
+            background: #e5e5ea;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .task-card-progress-bar {
+            height: 100%;
+            background: #007aff;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* 加载动画 */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0, 122, 255, 0.2);
+            border-top-color: #007aff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* 控制面板 */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            z-index: 10000;
+            max-width: 300px;
+        }
+
+        .control-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .control-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: left;
+            transition: background 0.2s;
+        }
+
+        .control-button:hover {
+            background: #444;
+        }
+
+        .control-button.active {
+            background: #007aff;
+        }
+
+        .screen-label {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            z-index: 99;
+        }
+    </style>
+</head>
+<body>
+    <div class="control-panel">
+        <div class="control-title">场景导航</div>
+        <button class="control-button" onclick="showScreen('camera-recording')">1. 相机拍摄中</button>
+        <button class="control-button" onclick="showScreen('camera-complete')">2. 拍摄完成</button>
+        <button class="control-button" onclick="showScreen('desktop-processing')">3. 正在生成Live图</button>
+        <button class="control-button" onclick="showScreen('desktop-complete')">4. Live图生成完成</button>
+        <button class="control-button" onclick="showScreen('live-album')">5. 高光Live相册</button>
+        <button class="control-button" onclick="showScreen('photo-detail')">6. 照片详情+对话框</button>
+        <button class="control-button" onclick="showScreen('stepfun')">7. Stepfun处理中</button>
+        <button class="control-button" onclick="showScreen('desktop-notify')">8. 发布小红书提示</button>
+        <button class="control-button" onclick="showScreen('task-list')">9. 任务列表</button>
+    </div>
+
+    <div class="prototype-container">
+        <!-- 场景1: 相机拍摄中 -->
+        <div class="phone-frame">
+            <div class="screen camera-screen active" id="camera-recording">
+                <div class="status-bar">
+                    <div class="time">07:00</div>
+                    <div class="indicators">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="camera-preview">
+                    <div class="camera-status">
+                        <div class="camera-status-title">相机取景框</div>
+                        <div class="camera-status-text">拍摄中</div>
+                    </div>
+                </div>
+                <div class="camera-controls">
+                    <div class="shutter-button recording">
+                        <div class="shutter-button-inner"></div>
+                    </div>
+                </div>
+                <div class="screen-label">场景1: 相机拍摄中</div>
+            </div>
+
+            <!-- 场景2: 拍摄完成 -->
+            <div class="screen camera-screen" id="camera-complete">
+                <div class="status-bar">
+                    <div class="time">07:00</div>
+                    <div class="indicators">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="notification show">
+                    <div class="notification-icon">😊</div>
+                    <div class="notification-content">
+                        <div class="notification-message">正在生成你的精彩瞬间 80%</div>
+                    </div>
+                </div>
+                <div class="camera-preview">
+                    <div class="camera-status">
+                        <div class="camera-status-title">相机取景框</div>
+                        <div class="camera-status-text">拍摄完成</div>
+                    </div>
+                </div>
+                <div class="camera-controls">
+                    <div class="shutter-button">
+                        <div class="shutter-button-inner"></div>
+                    </div>
+                </div>
+                <div class="screen-label">场景2: 拍摄完成 + 处理通知</div>
+            </div>
+
+            <!-- 场景3: 桌面 - 正在处理 -->
+            <div class="screen desktop-screen" id="desktop-processing">
+                <div class="status-bar">
+                    <div class="time">07:00</div>
+                    <div class="indicators">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="notification show">
+                    <div class="notification-icon">😊</div>
+                    <div class="notification-content">
+                        <div class="notification-message">精彩瞬间已准备就绪</div>
+                    </div>
+                </div>
+                <div class="agent-area">
+                    Agent 主动交互区
+                </div>
+                <div class="content-grid">
+                    <div class="content-card"></div>
+                    <div class="content-card"></div>
+                    <div class="content-card creating">
+                        <div class="spinner"></div>
+                        <div class="status-text">高光Live图生成中</div>
+                        <div class="badge">转化</div>
+                    </div>
+                    <div class="content-card"></div>
+                </div>
+                <div class="bottom-nav">
+                    <div class="nav-item">
+                        <div class="nav-icon">📷</div>
+                        <div>相机</div>
+                    </div>
+                    <div class="nav-item">
+                        <div class="nav-icon">⌨️</div>
+                        <div>多模态输入区</div>
+                    </div>
+                    <div class="nav-item">
+                        <div class="nav-icon">📱</div>
+                        <div>应用库</div>
+                    </div>
+                </div>
+                <div class="screen-label">场景3: 桌面 - Live图生成中</div>
+            </div>
+
+            <!-- 场景4: 桌面 - 生成完成 -->
+            <div class="screen desktop-screen" id="desktop-complete">
+                <div class="status-bar">
+                    <div class="time">07:00</div>
+                    <div class="indicators">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="agent-area">
+                    Agent 主动交互区
+                </div>
+                <div class="content-grid">
+                    <div class="content-card"></div>
+                    <div class="content-card"></div>
+                    <div class="content-card">
+                        <svg width="100%" height="100%" viewBox="0 0 200 200" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                            <rect x="30" y="60" width="140" height="80" fill="rgba(255,255,255,0.2)" rx="4"/>
+                            <circle cx="100" cy="100" r="30" fill="rgba(255,255,255,0.3)"/>
+                        </svg>
+                        <div class="live-badge">LIVE</div>
+                        <div class="stack-indicator">
+                            <div class="stack-dot"></div>
+                            <div class="stack-dot"></div>
+                            <div class="stack-dot"></div>
+                        </div>
+                    </div>
+                    <div class="content-card"></div>
+                </div>
+                <div class="bottom-nav">
+                    <div class="nav-item">
+                        <div class="nav-icon">📷</div>
+                        <div>相机</div>
+                    </div>
+                    <div class="nav-item">
+                        <div class="nav-icon">⌨️</div>
+                        <div>多模态输入区</div>
+                    </div>
+                    <div class="nav-item">
+                        <div class="nav-icon">📱</div>
+                        <div>应用库</div>
+                    </div>
+                </div>
+                <div class="dialog-overlay show">
+                    <div class="dialog">
+                        <div class="dialog-header">
+                            <div class="dialog-icon">😊</div>
+                            <div class="dialog-title">高光Live提取完成</div>
+                        </div>
+                        <div class="dialog-preview">
+                            <svg width="100%" height="100%" viewBox="0 0 320 180" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                                <rect x="40" y="50" width="240" height="80" fill="rgba(255,255,255,0.2)" rx="4"/>
+                                <circle cx="160" cy="90" r="30" fill="rgba(255,255,255,0.3)"/>
+                            </svg>
+                        </div>
+                        <div class="dialog-actions">
+                            <button class="dialog-button primary">查看</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-label">场景4: Live图生成完成弹窗</div>
+            </div>
+
+            <!-- 场景5: 高光Live相册 -->
+            <div class="screen live-album-screen" id="live-album">
+                <div class="status-bar" style="color: #fff;">
+                    <div class="time">07:00</div>
+                    <div class="indicators">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="album-header">
+                    <div class="album-title">高光Live</div>
+                    <div class="album-count">6 个项目</div>
+                </div>
+                <div class="album-grid">
+                    <div class="album-item">
+                        <svg width="100%" height="100%" viewBox="0 0 200 200">
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <rect width="200" height="200" fill="url(#grad1)"/>
+                            <rect x="30" y="70" width="140" height="60" fill="rgba(255,255,255,0.2)" rx="4"/>
+                            <circle cx="100" cy="100" r="20" fill="rgba(255,255,255,0.3)"/>
+                        </svg>
+                    </div>
+                    <div class="album-item">
+                        <svg width="100%" height="100%" viewBox="0 0 200 200">
+                            <rect width="200" height="200" fill="#333"/>
+                            <rect x="20" y="60" width="60" height="80" fill="rgba(255,255,255,0.2)" rx="4"/>
+                            <rect x="90" y="60" width="60" height="80" fill="rgba(255,255,255,0.2)" rx="4"/>
+                        </svg>
+                    </div>
+                    <div class="album-item">
+                        <svg width="100%" height="100%" viewBox="0 0 200 200">
+                            <rect width="200" height="200" fill="#444"/>
+                            <path d="M 40 140 L 100 60 L 160 140 Z" fill="rgba(255,255,255,0.2)"/>
+                        </svg>
+                    </div>
+                    <div class="album-item">
+                        <svg width="100%" height="100%" viewBox="0 0 200 200">
+                            <rect width="200" height="200" fill="#555"/>
+                            <rect x="40" y="40" width="120" height="120" fill="rgba(255,255,255,0.2)" rx="4"/>
+                        </svg>
+                    </div>
+                    <div class="album-item">
+                        <svg width="100%" height="100%" viewBox="0 0 200 200">
+                            <defs>
+                                <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#2c3e50;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#3498db;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <rect width="200" height="200" fill="url(#grad2)"/>
+                            <rect x="60" y="100" width="80" height="40" fill="rgba(255,255,255,0.2)" rx="20"/>
+                        </svg>
+                    </div>
+                    <div class="album-item">
+                        <svg width="100%" height="100%" viewBox="0 0 200 200">
+                            <rect width="200" height="200" fill="#222"/>
+                            <circle cx="100" cy="60" r="30" fill="rgba(255,255,255,0.2)"/>
+                            <circle cx="100" cy="140" r="30" fill="rgba(255,255,255,0.2)"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="screen-label">场景5: 高光Live相册</div>
+            </div>
+
+            <!-- 场景6: 照片详情 -->
+            <div class="screen photo-detail-screen" id="photo-detail">
+                <div class="status-bar" style="color: #fff; position: absolute; top: 0; left: 0; right: 0; z-index: 11;">
+                    <div class="time">07:00</div>
+                    <div class="indicators">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="photo-header">
+                    <div class="back-button">←</div>
+                    <div class="photo-datetime">2025年12月4日<br>13:52</div>
+                </div>
+                <div class="photo-content">
+                    <svg width="80%" height="auto" viewBox="0 0 400 300">
+                        <defs>
+                            <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="400" height="300" fill="url(#grad3)"/>
+                        <rect x="80" y="100" width="240" height="100" fill="rgba(255,255,255,0.2)" rx="8"/>
+                        <circle cx="200" cy="150" r="40" fill="rgba(255,255,255,0.3)"/>
+                    </svg>
+                </div>
+                <div class="photo-footer">
+                    <button class="footer-button">♥</button>
+                    <button class="footer-button">↗</button>
+                    <button class="footer-button">🗑</button>
+                </div>
+                <div class="dialog-overlay show">
+                    <div class="dialog">
+                        <div class="dialog-header">
+                            <div class="dialog-icon">😊</div>
+                            <div class="dialog-title">要将这些Live图合成高光视频吗？</div>
+                        </div>
+                        <div class="dialog-actions">
+                            <button class="dialog-button">忽略</button>
+                            <button class="dialog-button primary">OK</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-label">场景6: 照片详情 + 合成提示</div>
+            </div>
+
+            <!-- 场景7: Stepfun处理 -->
+            <div class="screen stepfun-screen" id="stepfun">
+                <div class="status-bar">
+                    <div class="time">09:41</div>
+                    <div class="indicators">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="stepfun-header">
+                    <div class="stepfun-logo">S</div>
+                    <div class="stepfun-title">Stepfun</div>
+                </div>
+                <div class="stepfun-content">
+                    <div class="stepfun-intro">
+                        好的！我来帮您分析这段视频，识别其中的精彩瞬间和高光时刻，并为您生成一个包含这些精华片段的短视频～
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header">
+                            <div class="step-indicator completed">✓</div>
+                            <div>
+                                <div class="step-title">分析视频内容并识别高光帧</div>
+                                <div class="step-description">已完成视频内容的深度分析，运用 AI 模型识别出 5 个精彩动作瞬间和关键场景，准备进行片段剪辑。</div>
+                            </div>
+                        </div>
+                        <div class="step-detail">
+                            <div class="step-detail-icon">🎬</div>
+                            <div class="step-detail-text">
+                                <div>正在处理视频源</div>
+                                <div class="step-detail-path">/uploads/raw_video_footage.mp4</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header">
+                            <div class="step-indicator completed">✓</div>
+                            <div>
+                                <div class="step-title">剪辑高光片段并生成摘要</div>
+                                <div class="step-description">已将识别出的高光时刻剪辑成独立片段，并为每个片段生成了简短的内容摘要和时间戳记录。</div>
+                            </div>
+                        </div>
+                        <div class="step-detail">
+                            <div class="step-detail-icon">📄</div>
+                            <div class="step-detail-text">
+                                <div>正在生成摘要记录</div>
+                                <div class="step-detail-path">highlights_summary.md</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-header">
+                            <div class="step-indicator loading">
+                                <div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div>
+                            </div>
+                            <div>
+                                <div class="step-title">合成最终高光集锦视频</div>
+                                <div class="step-description">已完成所有片段的剪辑和准备工作，接下来将把它们合成为一个流畅的高光集锦视频。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="processing-indicator">
+                    <div class="processing-icon">📹</div>
+                    <div class="processing-text">
+                        <div class="processing-title">合成最终高光集锦视频</div>
+                        <div class="processing-time">00:05</div>
+                    </div>
+                    <div class="processing-more">⋯</div>
+                </div>
+                <div class="screen-label">场景7: Stepfun处理中</div>
+            </div>
+
+            <!-- 场景8: 桌面 - 小红书通知 -->
+            <div class="screen desktop-screen" id="desktop-notify">
+                <div class="status-bar">
+                    <div class="time">07:00</div>
+                    <div class="indicators">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="notification show">
+                    <div class="notification-icon">📷</div>
+                    <div class="notification-content">
+                        <div class="notification-title">精彩瞬间我整理成Live图了</div>
+                        <div class="notification-message">要发小红书吗？</div>
+                    </div>
+                </div>
+                <div class="dynamic-island expanded">
+                    <div class="island-content active">
+                        <div class="island-icon">🎬</div>
+                        <div class="island-text">
+                            <div class="island-title">正在处理 2 个任务</div>
+                            <div class="island-subtitle">点击查看详情</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="agent-area" style="margin-top: 80px;">
+                    Agent 主动交互区
+                </div>
+                <div class="content-grid">
+                    <div class="content-card"></div>
+                    <div class="content-card"></div>
+                    <div class="content-card">
+                        <svg width="100%" height="100%" viewBox="0 0 200 200" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                            <rect x="30" y="60" width="140" height="80" fill="rgba(255,255,255,0.2)" rx="4"/>
+                            <circle cx="100" cy="100" r="30" fill="rgba(255,255,255,0.3)"/>
+                        </svg>
+                        <div class="live-badge">LIVE</div>
+                        <div class="stack-indicator">
+                            <div class="stack-dot"></div>
+                            <div class="stack-dot"></div>
+                            <div class="stack-dot"></div>
+                        </div>
+                    </div>
+                    <div class="content-card"></div>
+                </div>
+                <div class="bottom-nav">
+                    <div class="nav-item">
+                        <div class="nav-icon">📷</div>
+                        <div>相机</div>
+                    </div>
+                    <div class="nav-item">
+                        <div class="nav-icon">⌨️</div>
+                        <div>多模态输入区</div>
+                    </div>
+                    <div class="nav-item">
+                        <div class="nav-icon">📱</div>
+                        <div>应用库</div>
+                    </div>
+                </div>
+                <div class="screen-label">场景8: 小红书发布提示 + 多任务</div>
+            </div>
+
+            <!-- 场景9: 任务列表 -->
+            <div class="screen task-list-screen" id="task-list">
+                <div class="status-bar">
+                    <div class="time">07:00</div>
+                    <div class="indicators">
+                        <span>📶</span>
+                        <span>📡</span>
+                        <span>🔋</span>
+                    </div>
+                </div>
+                <div class="task-header">
+                    <div class="task-header-title">任务</div>
+                    <div class="task-tabs">
+                        <div class="task-tab active">进行中</div>
+                        <div class="task-tab">历史记录</div>
+                    </div>
+                </div>
+                <div class="task-section">
+                    <div class="task-section-title">正在处理</div>
+                    <div class="task-card">
+                        <div class="task-card-header">
+                            <div class="task-card-icon">🎬</div>
+                            <div class="task-card-info">
+                                <div class="task-card-title">合成高光集锦视频</div>
+                                <div class="task-card-status processing">正在处理中...</div>
+                            </div>
+                        </div>
+                        <div class="task-card-progress">
+                            <div class="task-card-progress-bar" style="width: 65%;"></div>
+                        </div>
+                    </div>
+                    <div class="task-card">
+                        <div class="task-card-header">
+                            <div class="task-card-icon">📱</div>
+                            <div class="task-card-info">
+                                <div class="task-card-title">发布到小红书</div>
+                                <div class="task-card-status processing">等待用户确认</div>
+                            </div>
+                        </div>
+                        <div class="task-card-progress">
+                            <div class="task-card-progress-bar" style="width: 20%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-section">
+                    <div class="task-section-title">今天完成</div>
+                    <div class="task-card">
+                        <div class="task-card-header">
+                            <div class="task-card-icon">✓</div>
+                            <div class="task-card-info">
+                                <div class="task-card-title">高光Live图提取</div>
+                                <div class="task-card-status">已完成 · 6个项目</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-label">场景9: 任务列表</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // 隐藏所有屏幕
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+
+            // 显示指定屏幕
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            }
+
+            // 高亮当前按钮
+            const buttons = document.querySelectorAll('.control-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // 添加自动轮播功能（可选）
+        let currentScreenIndex = 0;
+        const screenIds = [
+            'camera-recording',
+            'camera-complete',
+            'desktop-processing',
+            'desktop-complete',
+            'live-album',
+            'photo-detail',
+            'stepfun',
+            'desktop-notify',
+            'task-list'
+        ];
+
+        // 取消注释以下代码启用自动轮播
+        // setInterval(() => {
+        //     currentScreenIndex = (currentScreenIndex + 1) % screenIds.length;
+        //     showScreen(screenIds[currentScreenIndex]);
+        // }, 5000);
+    </script>
+</body>
+</html>
